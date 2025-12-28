@@ -5,17 +5,38 @@ let config = { bg: "#1a1a2e", text: "#eeeeee", font: "Georgia", size: 18 };
 
 // Initialize App
 async function init() {
+    console.log("Initializing App...");
+    const verseText = document.getElementById('verse-text');
+    
+    // Show a loading message so you know the script is alive
+    if (verseText) verseText.textContent = "Loading scriptures...";
+
     try {
-        const resp = await fetch('scriptures.csv');
+        // Use ./ to ensure it looks in the same folder on GitHub
+        const resp = await fetch('./scriptures.csv');
+        
+        if (!resp.ok) {
+            throw new Error(`HTTP error! status: ${resp.status}`);
+        }
+
         const csv = await resp.text();
+        
         Papa.parse(csv, {
             header: true,
+            skipEmptyLines: true, // Prevents errors if there is a blank line at the end
             complete: (res) => {
                 scriptures = res.data;
-                nextScripture();
+                if (scriptures.length > 0) {
+                    nextScripture();
+                } else {
+                    if (verseText) verseText.textContent = "CSV is empty!";
+                }
             }
         });
-    } catch (e) { console.error("CSV load failed", e); }
+    } catch (e) { 
+        console.error("CSV load failed:", e); 
+        if (verseText) verseText.textContent = "Failed to load CSV. Check file name.";
+    }
 }
 
 function updateUI() {

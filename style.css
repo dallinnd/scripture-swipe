@@ -12,7 +12,20 @@ body {
     transform: translateY(-20px);
 }
 
-/* Hide scrollbars but allow scrolling */
-#theme-menu::-webkit-scrollbar {
-    display: none;
+/* Ensure the menu itself can scroll if content is too long */
+#theme-menu {
+    max-height: 85vh; /* Limit height to 85% of screen */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Fix the Tab Content visibility */
+#themes-content, #fonts-content {
+    width: 100%;
+    padding-bottom: 20px; /* Space at the bottom */
+}
+
+/* Hide the inactive tab content */
+.hidden {
+    display: none !important;
 }

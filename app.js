@@ -44,7 +44,9 @@ function updateUI() {
     const textEl = document.getElementById('verse-text');
     const locEl = document.getElementById('verse-location');
     const menuBtn = document.getElementById('menu-button');
+    const menuEl = document.getElementById('theme-menu');
 
+    // 1. Update Main Display
     textEl.style.color = config.text;
     textEl.style.fontSize = `${config.size * 1.3}px`;
     textEl.style.fontFamily = config.font;
@@ -54,7 +56,42 @@ function updateUI() {
     
     menuBtn.style.color = config.text;
     document.getElementById('font-size-display').textContent = config.size;
+
+    // 2. FIX: Update Menu Font Sizes
+    // This ensures the menu buttons also grow/shrink with the settings
+    const menuButtons = menuEl.querySelectorAll('button, h3, span');
+    menuButtons.forEach(el => {
+        // We use a slightly smaller scale for the menu than the main text
+        if (!el.id.includes('increase') && !el.id.includes('decrease')) {
+            el.style.fontSize = `${config.size * 0.9}px`;
+        }
+    });
 }
+
+// 3. FIX: Tab Switching Logic
+const themesTab = document.getElementById('themes-tab');
+const fontsTab = document.getElementById('fonts-tab');
+const themesContent = document.getElementById('themes-content');
+const fontsContent = document.getElementById('fonts-content');
+
+themesTab.onclick = () => {
+    themesContent.classList.remove('hidden');
+    fontsContent.classList.add('hidden');
+    themesTab.classList.add('border-blue-500', 'text-gray-800');
+    themesTab.classList.remove('text-gray-400', 'border-transparent');
+    fontsTab.classList.add('text-gray-400', 'border-transparent');
+    fontsTab.classList.remove('border-blue-500', 'text-gray-800');
+};
+
+fontsTab.onclick = () => {
+    fontsContent.classList.remove('hidden');
+    themesContent.classList.add('hidden');
+    fontsTab.classList.add('border-blue-500', 'text-gray-800');
+    fontsTab.classList.remove('text-gray-400', 'border-transparent');
+    themesTab.classList.add('text-gray-400', 'border-transparent');
+    themesTab.classList.remove('border-blue-500', 'text-gray-800');
+};
+
 
 function nextScripture() {
     if (pos < history.length - 1) {
